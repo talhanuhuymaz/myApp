@@ -18,90 +18,78 @@ import androidx.compose.ui.text.font.FontWeight
 fun LoginScreen(navController: NavHostController) {
     var email by remember { mutableStateOf("") }
     var password by remember { mutableStateOf("") }
+    var errorMessage by remember { mutableStateOf("") }
 
     Column(
         modifier = Modifier
             .fillMaxSize()
-            .padding(16.dp),  // Padding ekleyerek daha düzgün görünmesini sağladık
+            .padding(16.dp),
         verticalArrangement = Arrangement.Center,
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
-        // Logo
         Image(
             painter = painterResource(id = R.drawable.mind),
             contentDescription = "App Logo",
-            modifier = Modifier.size(200.dp)  // Logo boyutunu küçültme
+            modifier = Modifier.size(150.dp)
         )
-
         Spacer(modifier = Modifier.height(16.dp))
-
-        // Başlık
         Text(
             text = "Welcome to MindUp",
             fontSize = 28.sp,
-            fontWeight = FontWeight.Bold
+            fontWeight = FontWeight.Bold,
+            color = MaterialTheme.colorScheme.primary
         )
-
-        Spacer(modifier = Modifier.height(30.dp))
-
-        // Email alanı
+        Spacer(modifier = Modifier.height(24.dp))
         OutlinedTextField(
             value = email,
             onValueChange = { email = it },
             label = { Text("Email address") },
             singleLine = true,
-            modifier = Modifier.fillMaxWidth()  // Genişlik ayarı
+            modifier = Modifier.fillMaxWidth()
         )
-
         Spacer(modifier = Modifier.height(16.dp))
-
-        // Şifre alanı
         OutlinedTextField(
             value = password,
             onValueChange = { password = it },
             label = { Text("Password") },
             visualTransformation = PasswordVisualTransformation(),
             singleLine = true,
-            modifier = Modifier.fillMaxWidth()  // Genişlik ayarı
+            modifier = Modifier.fillMaxWidth()
         )
-
         Spacer(modifier = Modifier.height(16.dp))
-
-        // Login butonu
+        if (errorMessage.isNotEmpty()) {
+            Text(text = errorMessage, color = MaterialTheme.colorScheme.error)
+        }
         Button(
-            onClick = { navController.navigate("main") },
-            modifier = Modifier.fillMaxWidth()  // Genişlik ayarı
+            onClick = {
+                if (email.isNotEmpty() && password.isNotEmpty()) {
+                    navController.navigate("main")
+                } else {
+                    errorMessage = "Please fill in all fields"
+                }
+            },
+            modifier = Modifier.fillMaxWidth()
         ) {
             Text("Login")
         }
-
         Spacer(modifier = Modifier.height(32.dp))
-
-        // Forgot Password linki
         Text(
             text = "Forgot Password?",
-            modifier = Modifier.clickable { /* Handle forgot password */ },
+            modifier = Modifier.clickable { /* Forgot Password Logic */ },
             color = MaterialTheme.colorScheme.primary
         )
-
-        Spacer(modifier = Modifier.height(32.dp))
-
-        // Google ile giriş yapma
+        Spacer(modifier = Modifier.height(16.dp))
         Text(text = "Or sign in with")
-
-        Row(
-            modifier = Modifier
-                .fillMaxWidth()
-                .padding(20.dp),
-            horizontalArrangement = Arrangement.SpaceEvenly
-        ) {
+        Spacer(modifier = Modifier.height(16.dp))
+        Row(horizontalArrangement = Arrangement.SpaceEvenly, modifier = Modifier.fillMaxWidth()) {
             Image(
                 painter = painterResource(id = R.drawable.google),
                 contentDescription = "Google Sign-In",
                 modifier = Modifier
-                    .size(30.dp)
-                    .clickable { /* Handle Google Sign-In */ }
+                    .size(32.dp)
+                    .clickable { /* Google Sign-In Logic */ }
             )
         }
     }
 }
+
