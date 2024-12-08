@@ -1,5 +1,6 @@
 package com.example.myapp
 
+import androidx.compose.foundation.Image
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.material3.*
@@ -9,7 +10,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import androidx.compose.ui.text.font.FontWeight
+
 
 @Composable
 fun MainPage() {
@@ -98,7 +99,6 @@ fun MainPage() {
         }
     }
 }
-
 @Composable
 fun MoodSelection(onMoodSelected: (String) -> Unit) {
     Row(
@@ -106,13 +106,13 @@ fun MoodSelection(onMoodSelected: (String) -> Unit) {
         horizontalArrangement = Arrangement.SpaceEvenly
     ) {
         listOf(
-            "😊" to "Happy",
-            "😔" to "Sad",
-            "😡" to "Angry",
-            "😌" to "Relaxed"
-        ).forEach { (emoji, mood) ->
+            R.drawable.happy to "Happy",
+            R.drawable.sad to "Sad",
+            R.drawable.angry to "Angry",
+            R.drawable.relaxed to "Relaxed"
+        ).forEach { (imageRes, mood) ->
             MoodCard(
-                emoji = emoji,
+                imageRes = imageRes,
                 mood = mood,
                 onClick = { onMoodSelected(mood) }
             )
@@ -121,23 +121,26 @@ fun MoodSelection(onMoodSelected: (String) -> Unit) {
 }
 
 @Composable
-fun MoodCard(emoji: String, mood: String, onClick: () -> Unit) {
+fun MoodCard(imageRes: Int, mood: String, onClick: () -> Unit) {
     Card(
         shape = MaterialTheme.shapes.medium,
         modifier = Modifier
             .size(80.dp)
             .clickable { onClick() },
-        elevation = CardDefaults.elevatedCardElevation(4.dp)
+        elevation = CardDefaults.elevatedCardElevation(4.dp),
+        colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.tertiary)
     ) {
         Column(
             horizontalAlignment = Alignment.CenterHorizontally,
             verticalArrangement = Arrangement.Center,
             modifier = Modifier.fillMaxSize()
         ) {
-            Text(
-                text = emoji,
-                fontSize = 30.sp,
-                modifier = Modifier.padding(bottom = 8.dp)
+            Image(
+                painter = painterResource(id = imageRes),
+                contentDescription = mood,
+                modifier = Modifier
+                    .size(60.dp)
+                    .padding(bottom = 8.dp)
             )
             Text(
                 text = mood,
@@ -148,6 +151,7 @@ fun MoodCard(emoji: String, mood: String, onClick: () -> Unit) {
     }
 }
 
+
 @Composable
 fun EntryCard(mood: String, note: String) {
     Card(
@@ -155,7 +159,9 @@ fun EntryCard(mood: String, note: String) {
         modifier = Modifier
             .fillMaxWidth()
             .padding(horizontal = 16.dp),
-        elevation = CardDefaults.elevatedCardElevation(4.dp)
+        elevation = CardDefaults.elevatedCardElevation(4.dp),
+        colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.tertiary // Use the new card color
+        )
     ) {
         Column(
             modifier = Modifier
@@ -175,4 +181,6 @@ fun EntryCard(mood: String, note: String) {
         }
     }
 }
+
+
 
